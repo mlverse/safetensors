@@ -1,0 +1,24 @@
+Package: safetensors
+Title: Safetensors File Format
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Daniel", "Falbel", , "daniel@posit.co", role = c("aut", "cre")),
+    person(family = "Posit", role = c("cph"))
+    )
+Description: Allows loading 'safetensors' files into a list of tensors. It supports
+    loading tensors into different formats and devices.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0),
+    torch (>= 0.10.0)
+Config/testthat/edition: 3
+Imports: 
+    cli,
+    jsonlite,
+    R6,
+    rlang
+Remotes:
+    mlverse/torch
