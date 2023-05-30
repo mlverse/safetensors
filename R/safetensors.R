@@ -91,7 +91,7 @@ safetensors <- R6::R6Class(
 )
 
 torch_tensor_from_raw <- function(raw, meta, device) {
-  x <- torch::tensor_from_buffer(
+  x <- torch::torch_tensor_from_buffer(
     raw,
     shape = meta$shape,
     dtype = torch_dtype_from_safe(meta$dtype)
