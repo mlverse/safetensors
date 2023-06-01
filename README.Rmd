@@ -1,22 +1,31 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # safetensors
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/mlverse/safetensors/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mlverse/safetensors/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-safetensors is a pure R implementation of the
-[safetensors](https://github.com/huggingface/safetensors) file format.
+safetensors is a pure R implementation of the [safetensors](https://github.com/huggingface/safetensors) file format.
 
 Currently only reading files is supported.
 
 ## Installation
 
-You can install the development version of safetensors from
-[GitHub](https://github.com/) with:
+You can install the development version of safetensors from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -25,9 +34,9 @@ devtools::install_github("mlverse/safetensors")
 
 ## Example
 
-Here’s an example of writing and reading safetensors files:
+Here's an example of writing and reading safetensors files:
 
-``` r
+```{r}
 library(torch)
 library(safetensors)
 
@@ -37,16 +46,10 @@ tensors <- list(
 )
 
 str(tensors)
-#> List of 2
-#>  $ x:Float [1:10, 1:10]
-#>  $ y:Float [1:10, 1:10]
 
 tmp <- tempfile()
 safe_save_file(tensors, tmp)
 
 tensors <- safe_load_file(tmp)
 str(tensors)
-#> List of 2
-#>  $ x:Float [1:10, 1:10]
-#>  $ y:Float [1:10, 1:10]
 ```
