@@ -13,11 +13,13 @@ safe_load_file <- function(path, ..., framework = "torch", device = "cpu") {
   nms <- f$keys()
   output <- structure(
     vector(length = length(nms), mode = "list"),
-    names = nms
+    names = nms,
+    metadata = f$metadata
   )
   for (key in nms) {
     output[[key]] <- f$get_tensor(key)
   }
+  attr(output, "max_offset") <- f$max_offset
   output
 }
 
@@ -39,6 +41,9 @@ safetensors <- R6::R6Class(
     framework = NULL,
     #' @field device the device to where tensors are copied
     device = NULL,
+    #' @field max_offset the largest offset boundary that was visited. Mainly
+    #' used in torch to find the end of the safetensors file.
+    max_offset = 0L,
     #' @description
     #' Opens the connection with the file
     #' @param path Path to the file to load
@@ -52,9 +57,15 @@ safetensors <- R6::R6Class(
       # read in the metadata and store it
       if (is.raw(path)) {
         self$con <- rawConnection(path, open = "rb")
-      } else {
+      } else if (is.character(path)) {
         self$con <- file(path, "rb")
+      } else if (inherits(path, "connection")) {
+        # safetensors has no responsability over this connection as this was
+        # created efore passing to it.
+        private$close_con <- FALSE
+        self$con <- path
       }
+
       metadata_size <- readBin(self$con, what = integer(), n = 1, size = 8)
       raw_json <- readBin(self$con, what = "raw", n = metadata_size)
 
@@ -75,8 +86,9 @@ safetensors <- R6::R6Class(
 
       offset_start <- private$byte_buffer_begin + meta$data_offsets[1]
       offset_length <- meta$data_offsets[2] - meta$data_offsets[1]
-      seek(self$con, offset_start)
+      self$max_offset <- max(self$max_offset, offset_start + offset_length)
 
+      seek(self$con, offset_start)
       raw_tensor <- readBin(self$con, what = "raw", n = offset_length)
 
       if (self$framework == "torch") {
@@ -88,8 +100,11 @@ safetensors <- R6::R6Class(
   ),
   private = list(
     byte_buffer_begin = 0L,
+    close_con = TRUE,
     finalize = function() {
-      close(self$con)
+      if (private$close_con) {
+        close(self$con)
+      }
     }
   )
 )
