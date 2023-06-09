@@ -50,7 +50,11 @@ safetensors <- R6::R6Class(
       self$device <- device
 
       # read in the metadata and store it
-      self$con <- file(path, "rb")
+      if (is.raw(path)) {
+        self$con <- rawConnection(path, open = "rb")
+      } else {
+        self$con <- file(path, "rb")
+      }
       metadata_size <- readBin(self$con, what = integer(), n = 1, size = 8)
       raw_json <- readBin(self$con, what = "raw", n = metadata_size)
 
