@@ -91,6 +91,22 @@ torch_dtype_to_safe <- function(x) {
     return("F32")
   } else if (x == torch::torch_float16()) {
     return("F16")
+  } else if (x == torch::torch_float64()) {
+    return("F64")
+  } else if (x == torch::torch_bool()) {
+    return("BOOL")
+  } else if (x == torch::torch_uint8()) {
+    return("U8")
+  } else if (x == torch::torch_int8()) {
+    return("I8")
+  } else if (x == torch::torch_int16()) {
+    return("I16")
+  } else if (x == torch::torch_int32()) {
+    return("I32")
+  } else if (x == torch::torch_int64()) {
+    return("I64")
+  } else {
+    cli::cli_abort("Unsupported data type {.val {x}}")
   }
 }
 
@@ -101,6 +117,22 @@ size_from_meta <- function(meta) {
     4L
   } else if (meta$dtype == "F16") {
     2L
+  } else if (meta$dtype == "F64") {
+    8L
+  } else if (meta$dtype == "U8") {
+    1L
+  } else if (meta$dtype == "I8") {
+    1L
+  } else if (meta$dtype == "I16") {
+    2L
+  } else if (meta$dtype == "I32") {
+    4L
+  } else if (meta$dtype == "I64") {
+    8L
+  } else if (meta$dtype == "BOOL") {
+    1L
+  } else {
+    cli::cli_abort("Unsupported dtype {.val {meta$dtype}}")
   }
 
   as.integer(numel*el_size)

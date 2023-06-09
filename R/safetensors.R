@@ -123,9 +123,17 @@ torch_tensor_from_raw <- function(raw, meta, device) {
 }
 
 torch_dtype_from_safe <- function(x) {
-  switch (x,
+  switch (
+    x,
+    "F16" = "float16",
     "F32" = "float",
-    "F16" = "float16"
+    "F64" = "float64",
+    "BOOL" = "bool",
+    "U8" = "uint8",
+    "I8" = "int8",
+    "I16" = "int16",
+    "I32" = "int32",
+    "I64" = "int64"
   )
 }
 
