@@ -82,11 +82,11 @@ tensor_meta <- function(x) {
 tensor_meta.torch_tensor <- function(x) {
   list(
     shape = x$shape,
-    dtype = torch_dtye_to_safe(x$dtype)
+    dtype = torch_dtype_to_safe(x$dtype)
   )
 }
 
-torch_dtye_to_safe <- function(x) {
+torch_dtype_to_safe <- function(x) {
   if (x == torch::torch_float()) {
     return("F32")
   } else if (x == torch::torch_float16()) {
