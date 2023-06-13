@@ -15,7 +15,13 @@ Currently only reading files is supported.
 
 ## Installation
 
-You can install the development version of safetensors from
+safetensors can be installed from CRAN with:
+
+``` r
+install.packages("safetensors")
+```
+
+The development version of safetensors from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -49,4 +55,14 @@ str(tensors)
 #> List of 2
 #>  $ x:Float [1:10, 1:10]
 #>  $ y:Float [1:10, 1:10]
+#>  - attr(*, "metadata")=List of 2
+#>   ..$ x:List of 3
+#>   .. ..$ shape       : int [1:2] 10 10
+#>   .. ..$ dtype       : chr "F32"
+#>   .. ..$ data_offsets: int [1:2] 0 400
+#>   ..$ y:List of 3
+#>   .. ..$ shape       : int [1:2] 10 10
+#>   .. ..$ dtype       : chr "F32"
+#>   .. ..$ data_offsets: int [1:2] 400 800
+#>  - attr(*, "max_offset")= int 929
 ```
