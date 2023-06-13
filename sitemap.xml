@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mlverse.github.io/safetensors/404.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/authors.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/index.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/reference/safe_load_file.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/reference/safe_save_file.html</loc>
+  </url>
+  <url>
+    <loc>https://mlverse.github.io/safetensors/reference/safetensors.html</loc>
+  </url>
+</urlset>
