@@ -9,4 +9,6 @@
 library(testthat)
 library(safetensors)
 
-test_check("safetensors")
+if (Sys.getenv("TORCH_TEST", unset = 0) == 1) {
+  test_check("safetensors")
+}
