@@ -5,10 +5,10 @@ Authors@R: c(
     person("Daniel", "Falbel", , "daniel@posit.co", role = c("aut", "cre")),
     person(family = "Posit", role = c("cph"))
     )
-Description: 'safetensors' is a file format for storing tensors that is secure (doesn't
-    allow for code execution), fast and simple to implement. It enables cross language
-    and cross frameworks compatibility making it an ideal format for storing machine 
-    learning model weights.
+Description: A file format for storing tensors that is secure (doesn't allow for 
+    code execution), fast and simple to implement. 'safetensors' also enables cross 
+    language and cross frameworks compatibility making it an ideal format for 
+    storing machine learning model weights.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
