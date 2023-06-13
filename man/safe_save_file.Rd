@@ -20,6 +20,9 @@ created with \code{file()}.}
 \item{metadata}{An optional string that is added to the file header. Possibly
 adding additional description to the weights.}
 }
+\value{
+The path invisibly or a raw vector.
+}
 \description{
 Writes a list of tensors to the safetensors format
 }
@@ -28,3 +31,14 @@ Writes a list of tensors to the safetensors format
 \item \code{safe_serialize()}: Serializes the tensors and returns a raw vector.
 
 }}
+\examples{
+if (rlang::is_installed("torch") && torch::torch_is_installed()) {
+  tensors <- list(x = torch::torch_randn(10, 10))
+  temp <- tempfile()
+  safe_save_file(tensors, temp)
+  safe_load_file(temp)
+
+  ser <- safe_serialize(tensors)
+}
+
+}

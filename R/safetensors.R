@@ -7,6 +7,19 @@
 #' @param framework Framework to load the data into. Currently only torch is supported
 #' @param device Device to copy data once loaded
 #'
+#' @returns A list with tensors in the file. The `metadata` attribute can be used
+#' to find metadata the metadata header in the file.
+#'
+#' @examples
+#' if (rlang::is_installed("torch") && torch::torch_is_installed()) {
+#'   tensors <- list(x = torch::torch_randn(10, 10))
+#'   temp <- tempfile()
+#'   safe_save_file(tensors, temp)
+#'   safe_load_file(temp)
+#' }
+#'
+#' @seealso [safetensors], [safe_save_file()]
+#'
 #' @export
 safe_load_file <- function(path, ..., framework = "torch", device = "cpu") {
   f <- safetensors$new(path, framework = framework, device = device)
@@ -28,6 +41,16 @@ safe_load_file <- function(path, ..., framework = "torch", device = "cpu") {
 #' Allows opening a connection to a safetensors file and query the tensor names,
 #' metadata, etc.
 #' Opening a connection only reads the file metadata into memory.
+#' This allows for more fined grained control over reading.
+#'
+#' @examples
+#' if (rlang::is_installed("torch") && torch::torch_is_installed()) {
+#' tensors <- list(x = torch::torch_randn(10, 10))
+#' temp <- tempfile()
+#' safe_save_file(tensors, temp)
+#' f <- safetensors$new(temp)
+#' f$get_tensor("x")
+#' }
 #'
 #' @export
 safetensors <- R6::R6Class(

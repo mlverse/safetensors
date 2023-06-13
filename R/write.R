@@ -7,6 +7,18 @@
 #' @param metadata An optional string that is added to the file header. Possibly
 #'   adding additional description to the weights.
 #'
+#' @examples
+#' if (rlang::is_installed("torch") && torch::torch_is_installed()) {
+#'   tensors <- list(x = torch::torch_randn(10, 10))
+#'   temp <- tempfile()
+#'   safe_save_file(tensors, temp)
+#'   safe_load_file(temp)
+#'
+#'   ser <- safe_serialize(tensors)
+#' }
+#'
+#' @returns The path invisibly or a raw vector.
+#'
 #' @export
 safe_save_file <- function(tensors, path, ..., metadata = NULL) {
   if (any(duplicated(names(tensors)))) {

@@ -12,6 +12,17 @@ Low level control over safetensors files
 Allows opening a connection to a safetensors file and query the tensor names,
 metadata, etc.
 Opening a connection only reads the file metadata into memory.
+This allows for more fined grained control over reading.
+}
+\examples{
+if (rlang::is_installed("torch") && torch::torch_is_installed()) {
+tensors <- list(x = torch::torch_randn(10, 10))
+temp <- tempfile()
+safe_save_file(tensors, temp)
+f <- safetensors$new(temp)
+f$get_tensor("x")
+}
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -23,6 +34,9 @@ Opening a connection only reads the file metadata into memory.
 \item{\code{framework}}{the framework used to return the tensors}
 
 \item{\code{device}}{the device to where tensors are copied}
+
+\item{\code{max_offset}}{the largest offset boundary that was visited. Mainly
+used in torch to find the end of the safetensors file.}
 }
 \if{html}{\out{</div>}}
 }

@@ -15,6 +15,22 @@ safe_load_file(path, ..., framework = "torch", device = "cpu")
 
 \item{device}{Device to copy data once loaded}
 }
+\value{
+A list with tensors in the file. The \code{metadata} attribute can be used
+to find metadata the metadata header in the file.
+}
 \description{
 Loads an safetensors file from disk.
+}
+\examples{
+if (rlang::is_installed("torch") && torch::torch_is_installed()) {
+  tensors <- list(x = torch::torch_randn(10, 10))
+  temp <- tempfile()
+  safe_save_file(tensors, temp)
+  safe_load_file(temp)
+}
+
+}
+\seealso{
+\link{safetensors}, \code{\link[=safe_save_file]{safe_save_file()}}
 }

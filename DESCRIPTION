@@ -5,8 +5,10 @@ Authors@R: c(
     person("Daniel", "Falbel", , "daniel@posit.co", role = c("aut", "cre")),
     person(family = "Posit", role = c("cph"))
     )
-Description: Allows loading 'safetensors' files into a list of tensors. It supports
-    loading tensors into different formats and devices.
+Description: 'safetensors' is a file format for storing tensors that is secure (doesn't
+    allow for code execution), fast and simple to implement. It enables cross language
+    and frameworks compatibility making it an ideal format store machine learning model
+    weights.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -22,5 +24,6 @@ Imports:
     rlang
 Remotes:
     mlverse/torch
-URL: https://github.com/mlverse/safetensors
+URL: https://github.com/mlverse/safetensors,
+    https://mlverse.github.io/safetensors/
 BugReports: https://github.com/mlverse/safetensors/issues
