@@ -64,16 +64,16 @@ make_meta <- function(tensors, metadata) {
     names = names(tensors)
   )
 
+  if (!is.null(metadata)) {
+    meta_[["__metadata__"]] <- validate_metadata(metadata)
+  }
+
   pos <- 0L
   for (nm in names(tensors)) {
     meta <- tensor_meta(tensors[[nm]])
     meta$data_offsets <- c(pos, pos + size_from_meta(meta))
     pos <- meta$data_offsets[2]
     meta_[[nm]] <- meta
-  }
-
-  if (!is.null(metadata)) {
-    meta_[["__metadata__"]] <- metadata
   }
 
   meta_
@@ -148,4 +148,14 @@ size_from_meta <- function(meta) {
   }
 
   as.integer(numel*el_size)
+}
+
+validate_metadata <- function(x) {
+  if (!rlang::is_list(x)) cli::cli_abort("{.arg metadata} must be a list.")
+  if (!rlang::is_named(x)) cli::cli_abort("{.arg metadata} must be a named list.")
+  lapply(x, function(item) {
+    if (!rlang::is_scalar_character(item))
+      cli::cli_abort("{.arg metadata} must be a named list of scalar characters.")
+  })
+  x
 }

@@ -38,3 +38,34 @@ test_that("with different datatypes", {
   }
 
 })
+
+test_that("metadata validations", {
+
+  tensors <- list(
+    x = torch::torch_randn(10, 10),
+    y = torch::torch_randn(5, 5)
+  )
+
+  tmp <- tempfile(fileext = ".safetensors")
+
+  metadata <- 1
+  expect_snapshot_error({
+    safe_save_file(tensors, tmp, metadata = metadata)
+  })
+
+  metadata <- list(x = 1)
+  expect_snapshot_error({
+    safe_save_file(tensors, tmp, metadata = metadata)
+  })
+
+  metadata <- list(y = c("1", "2"))
+  expect_snapshot_error({
+    safe_save_file(tensors, tmp, metadata = metadata)
+  })
+
+  metadata <- list("a")
+  expect_snapshot_error({
+    safe_save_file(tensors, tmp, metadata = metadata)
+  })
+
+})
