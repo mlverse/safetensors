@@ -93,7 +93,7 @@ tensor_meta <- function(x) {
 
 tensor_meta.torch_tensor <- function(x) {
   list(
-    shape = x$shape,
+    shape = as.list(x$shape), # we must store as a list to avoid simplification
     dtype = torch_dtype_to_safe(x$dtype)
   )
 }
@@ -123,7 +123,7 @@ torch_dtype_to_safe <- function(x) {
 }
 
 size_from_meta <- function(meta) {
-  numel <- prod(meta$shape)
+  numel <- prod(as.numeric(meta$shape))
 
   el_size <- if (meta$dtype == "F32") {
     4L
