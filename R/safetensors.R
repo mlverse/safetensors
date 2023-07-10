@@ -52,6 +52,8 @@ safe_load_file <- function(path, ..., framework = "torch", device = "cpu") {
 #' f$get_tensor("x")
 #' }
 #'
+#' @importFrom R6 R6Class
+#'
 #' @export
 safetensors <- R6::R6Class(
   "safetensors",
