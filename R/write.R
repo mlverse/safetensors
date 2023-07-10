@@ -84,7 +84,7 @@ tensor_buffer <- function(x) {
 }
 
 tensor_buffer.torch_tensor <- function(x) {
-  torch::buffer_from_torch_tensor(x)
+  torch::buffer_from_torch_tensor(x$cpu())
 }
 
 tensor_meta <- function(x) {
