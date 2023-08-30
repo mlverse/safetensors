@@ -158,7 +158,9 @@ torch_dtype_from_safe <- function(x) {
     "I8" = "int8",
     "I16" = "int16",
     "I32" = "int32",
-    "I64" = "int64"
+    "I64" = "int64",
+    "BF16" = "bfloat16",
+    cli::cli_abort("Unsupported dtype {.val {x}}")
   )
 }
 
