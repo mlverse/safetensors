@@ -1,4 +1,4 @@
-# safetensors (development version)
+# safetensors 0.1.2
 
 * Added support for BF16 data types.
 
