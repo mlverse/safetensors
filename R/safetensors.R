@@ -94,7 +94,7 @@ safetensors <- R6::R6Class(
       metadata_size <- readBin(self$con, what = integer(), n = 1, size = 8)
       raw_json <- readBin(self$con, what = "raw", n = metadata_size)
 
-      self$metadata <- jsonlite::fromJSON(rawToChar(raw_json))
+      self$metadata <- jsonlite::parse_json(rawToChar(raw_json), simplifyVector = TRUE)
       private$byte_buffer_begin <- 8L + metadata_size
     },
     #' @description
