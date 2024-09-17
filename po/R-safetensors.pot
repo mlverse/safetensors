@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: safetensors 0.1.2.9000\n"
+"POT-Creation-Date: 2024-09-05 23:57+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: safetensors.R:122
+msgid "Unsupported framework {.val {.self$framework}}"
+msgstr ""
+
+#: safetensors.R:163
+msgid "Unsupported dtype {.val {x}}"
+msgstr ""
+
+#: safetensors.R:169
+msgid "Unsupported framework {.val {x}}"
+msgstr ""
+
+#: safetensors.R:172
+msgid "for loading torch tensors."
+msgstr ""
+
+#: write.R:25
+msgid "Duplicated names are not allowed in {.arg tensors}"
+msgstr ""
+
+#: write.R:121
+msgid "Unsupported data type {.val {x}}"
+msgstr ""
+
+#: write.R:147
+msgid "Unsupported dtype {.val {meta$dtype}}"
+msgstr ""
+
+#: write.R:154
+msgid "{.arg metadata} must be a list."
+msgstr ""
+
+#: write.R:155
+msgid "{.arg metadata} must be a named list."
+msgstr ""
+
+#: write.R:158
+msgid "{.arg metadata} must be a named list of scalar characters."
+msgstr ""

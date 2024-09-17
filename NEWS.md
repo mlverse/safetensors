@@ -1,5 +1,7 @@
 # safetensors (development version)
 
+* Add FR translation of messages (#7 @cregouby)
+
 # safetensors 0.1.2
 
 * Added support for BF16 data types.

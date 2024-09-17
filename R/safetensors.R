@@ -119,7 +119,7 @@ safetensors <- R6::R6Class(
       if (self$framework == "torch") {
         torch_tensor_from_raw(raw_tensor, meta, self$device)
       } else {
-        cli::cli_abort("Unsupported framework {.val {.self$framework}}")
+        cli::cli_abort(gettext("Unsupported framework {.val {.self$framework}}"))
       }
     }
   ),
@@ -160,16 +160,16 @@ torch_dtype_from_safe <- function(x) {
     "I32" = "int32",
     "I64" = "int64",
     "BF16" = "bfloat16",
-    cli::cli_abort("Unsupported dtype {.val {x}}")
+    cli::cli_abort(gettext("Unsupported dtype {.val {x}}"))
   )
 }
 
 validate_framework <- function(x) {
   if (!x %in% c("torch")) {
-    cli::cli_abort("Unsupported framework {.val {x}}")
+    cli::cli_abort(gettext("Unsupported framework {.val {x}}"))
   }
   if (x == "torch") {
-    rlang::check_installed(x, reason = "for loading torch tensors.")
+    rlang::check_installed(x, reason = gettext("for loading torch tensors."))
   }
   x
 }

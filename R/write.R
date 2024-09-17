@@ -22,7 +22,7 @@
 #' @export
 safe_save_file <- function(tensors, path, ..., metadata = NULL) {
   if (any(duplicated(names(tensors)))) {
-    cli::cli_abort("Duplicated names are not allowed in {.arg tensors}")
+    cli::cli_abort(gettext("Duplicated names are not allowed in {.arg tensors}"))
   }
 
   if (is.character(path)) {
@@ -118,7 +118,7 @@ torch_dtype_to_safe <- function(x) {
   } else if (x == torch::torch_int64()) {
     return("I64")
   } else {
-    cli::cli_abort("Unsupported data type {.val {x}}")
+    cli::cli_abort(gettext("Unsupported data type {.val {x}}"))
   }
 }
 
@@ -144,18 +144,18 @@ size_from_meta <- function(meta) {
   } else if (meta$dtype == "BOOL") {
     1L
   } else {
-    cli::cli_abort("Unsupported dtype {.val {meta$dtype}}")
+    cli::cli_abort(gettext("Unsupported dtype {.val {meta$dtype}}"))
   }
 
   as.integer(numel*el_size)
 }
 
 validate_metadata <- function(x) {
-  if (!rlang::is_list(x)) cli::cli_abort("{.arg metadata} must be a list.")
-  if (!rlang::is_named(x)) cli::cli_abort("{.arg metadata} must be a named list.")
+  if (!rlang::is_list(x)) cli::cli_abort(gettext("{.arg metadata} must be a list."))
+  if (!rlang::is_named(x)) cli::cli_abort(gettext("{.arg metadata} must be a named list."))
   lapply(x, function(item) {
     if (!rlang::is_scalar_character(item))
-      cli::cli_abort("{.arg metadata} must be a named list of scalar characters.")
+      cli::cli_abort(gettext("{.arg metadata} must be a named list of scalar characters."))
   })
   x
 }
