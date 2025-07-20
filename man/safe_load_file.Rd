@@ -4,16 +4,14 @@
 \alias{safe_load_file}
 \title{Safe load a safetensors file}
 \usage{
-safe_load_file(path, ..., framework = "torch", device = "cpu")
+safe_load_file(path, ..., framework)
 }
 \arguments{
 \item{path}{Path to the file to load}
 
-\item{...}{Unused}
+\item{...}{Additional framework dependent arguments to pass to the tensor creation function.}
 
-\item{framework}{Framework to load the data into. Currently only torch is supported}
-
-\item{device}{Device to copy data once loaded}
+\item{framework}{Framework to load the data into. Currently supports "torch" and "pjrt"}
 }
 \value{
 A list with tensors in the file. The \code{metadata} attribute can be used

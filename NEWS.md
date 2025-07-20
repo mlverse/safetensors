@@ -1,5 +1,7 @@
 # safetensors (development version)
 
+* Added support for PJRT buffers.
+
 # safetensors 0.1.2
 
 * Added support for BF16 data types.
