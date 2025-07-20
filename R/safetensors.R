@@ -136,7 +136,7 @@ safetensors <- R6::R6Class(
   )
 )
 
-torch_tensor_from_raw <- function(raw, meta, device = "cpu") {
+torch_tensor_from_raw <- function(raw, meta, device) {
   x <- torch::torch_tensor_from_buffer(
     raw,
     shape = meta$shape,
