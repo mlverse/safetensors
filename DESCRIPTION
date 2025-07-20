@@ -3,6 +3,7 @@ Title: Safetensors File Format
 Version: 0.1.2.9000
 Authors@R: c(
     person("Daniel", "Falbel", , "daniel@posit.co", role = c("aut", "cre")),
+    person("Sebastian", "Fischer", , "seb.fischer@tutamail.com", role = "ctb"),
     person(family = "Posit", role = c("cph"))
     )
 Description: A file format for storing tensors that is secure (doesn't allow for

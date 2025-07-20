@@ -63,8 +63,6 @@ Opens the connection with the file
 \describe{
 \item{\code{path}}{Path to the file to load}
 
-\item{\code{...}}{Unused}
-
 \item{\code{...}}{(any)\cr
 Additional, framework dependent, arguments to pass to use when creating the tensor.
 For torch, this is the device, for pjrt the client.}
