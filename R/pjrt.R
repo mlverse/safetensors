@@ -30,7 +30,9 @@ safetensors_dtype_to_pjrt <- function(safetensors_dtype) {
     "U64" = "u64",
     "F32" = "f32",
     "F64" = "f64",
-    cli::cli_abort("Unsupported safetensors data type {.val {safetensors_dtype}}")
+    cli::cli_abort(
+      "Unsupported safetensors data type {.val {safetensors_dtype}}"
+    )
   )
 }
 
@@ -60,7 +62,7 @@ tensor_buffer.PJRTBuffer <- function(x) {
 
 tensor_meta.PJRTBuffer <- function(x) {
   list(
-    shape = as.list(dim(x)),  # Convert to list to avoid simplification
+    shape = as.list(dim(x)), # Convert to list to avoid simplification
     dtype = pjrt_dtype_to_safetensors(as.character(pjrt::pjrt_element_type(x)))
   )
 }

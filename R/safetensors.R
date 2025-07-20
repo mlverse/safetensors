@@ -94,7 +94,10 @@ safetensors <- R6::R6Class(
       metadata_size <- readBin(self$con, what = integer(), n = 1, size = 8)
       raw_json <- readBin(self$con, what = "raw", n = metadata_size)
 
-      self$metadata <- jsonlite::parse_json(rawToChar(raw_json), simplifyVector = TRUE)
+      self$metadata <- jsonlite::parse_json(
+        rawToChar(raw_json),
+        simplifyVector = TRUE
+      )
       private$byte_buffer_begin <- 8L + metadata_size
     },
     #' @description
@@ -157,14 +160,24 @@ pjrt_tensor_from_raw <- function(raw, meta, client = NULL) {
   dims <- as.integer(meta$shape)
 
   if (!length(dims)) {
-    pjrt::pjrt_scalar(raw, type = safetensors_dtype_to_pjrt(meta$dtype), client = client)
+    pjrt::pjrt_scalar(
+      raw,
+      type = safetensors_dtype_to_pjrt(meta$dtype),
+      client = client
+    )
   } else {
-    pjrt::pjrt_buffer(raw, shape = dims, type = safetensors_dtype_to_pjrt(meta$dtype), client = client, row_major = TRUE)
+    pjrt::pjrt_buffer(
+      raw,
+      shape = dims,
+      type = safetensors_dtype_to_pjrt(meta$dtype),
+      client = client,
+      row_major = TRUE
+    )
   }
 }
 
 torch_dtype_from_safe <- function(x) {
-  switch (
+  switch(
     x,
     "F16" = "float16",
     "F32" = "float",

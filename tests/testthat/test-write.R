@@ -33,19 +33,20 @@ test_that("can write a safetensors file (pjrt)", {
 })
 
 test_that("with different datatypes (torch)", {
-
-  data_type <- c("float16",
-                 "float",
-                 "float64",
-                 "bool",
-                 "uint8",
-                 "int8",
-                 "int16",
-                 "int32",
-                 "int64")
+  data_type <- c(
+    "float16",
+    "float",
+    "float64",
+    "bool",
+    "uint8",
+    "int8",
+    "int16",
+    "int32",
+    "int64"
+  )
 
   for (dtype in data_type) {
-    x <- list(x = torch::torch_randn(10)$to(dtype=dtype))
+    x <- list(x = torch::torch_randn(10)$to(dtype = dtype))
 
     tmp <- tempfile(fileext = ".safetensors")
     safe_save_file(x, tmp)
@@ -54,11 +55,9 @@ test_that("with different datatypes (torch)", {
 
     expect_true(torch::torch_allclose(x$x, reloaded$x))
   }
-
 })
 
 test_that("metadata validations", {
-
   tensors <- list(
     x = torch::torch_randn(10, 10),
     y = torch::torch_randn(5, 5)
@@ -85,7 +84,6 @@ test_that("metadata validations", {
   expect_snapshot_error({
     safe_save_file(tensors, tmp, metadata = metadata)
   })
-
 })
 
 test_that("with different datatypes (pjrt)", {
@@ -106,14 +104,17 @@ test_that("with different datatypes (pjrt)", {
 
   dat <- c(0L, 1:8, 0L)
   for (type in types) {
-    x <- switch(type$rtype,
+    x <- switch(
+      type$rtype,
       double = as.double(dat),
       integer = as.integer(dat),
       logical = as.logical(dat),
       stop()
     )
 
-    x <- list(x = pjrt::pjrt_buffer(array(x, dim = c(5, 2)), type = type$pjrt_type))
+    x <- list(
+      x = pjrt::pjrt_buffer(array(x, dim = c(5, 2)), type = type$pjrt_type)
+    )
 
     tmp <- tempfile(fileext = ".safetensors")
     safe_save_file(x, tmp)
@@ -122,11 +123,9 @@ test_that("with different datatypes (pjrt)", {
 
     expect_true(identical(pjrt::as_array(x$x), pjrt::as_array(reloaded$x)))
   }
-
 })
 
 test_that("metadata validations", {
-
   tensors <- list(
     x = torch::torch_randn(10, 10),
     y = torch::torch_randn(5, 5)
@@ -153,5 +152,4 @@ test_that("metadata validations", {
   expect_snapshot_error({
     safe_save_file(tensors, tmp, metadata = metadata)
   })
-
 })

@@ -27,7 +27,12 @@ safe_save_file <- function(tensors, path, ..., metadata = NULL) {
 
   if (is.character(path)) {
     con <- file(path, open = "wb")
-    on.exit({close(con)}, add = TRUE)
+    on.exit(
+      {
+        close(con)
+      },
+      add = TRUE
+    )
   } else {
     con <- path
   }
@@ -40,7 +45,12 @@ safe_save_file <- function(tensors, path, ..., metadata = NULL) {
 #' @export
 safe_serialize <- function(tensors, ..., metadata = NULL) {
   con <- rawConnection(raw(), open = "wb")
-  on.exit({close(con)}, add = TRUE)
+  on.exit(
+    {
+      close(con)
+    },
+    add = TRUE
+  )
   safe_save_file(tensors, con, metadata = metadata)
   rawConnectionValue(con)
 }
@@ -122,11 +132,18 @@ size_from_meta <- function(meta) {
 }
 
 validate_metadata <- function(x) {
-  if (!rlang::is_list(x)) cli::cli_abort("{.arg metadata} must be a list.")
-  if (!rlang::is_named(x)) cli::cli_abort("{.arg metadata} must be a named list.")
+  if (!rlang::is_list(x)) {
+    cli::cli_abort("{.arg metadata} must be a list.")
+  }
+  if (!rlang::is_named(x)) {
+    cli::cli_abort("{.arg metadata} must be a named list.")
+  }
   lapply(x, function(item) {
-    if (!rlang::is_scalar_character(item))
-      cli::cli_abort("{.arg metadata} must be a named list of scalar characters.")
+    if (!rlang::is_scalar_character(item)) {
+      cli::cli_abort(
+        "{.arg metadata} must be a named list of scalar characters."
+      )
+    }
   })
   x
 }

@@ -1,6 +1,9 @@
 test_that("load a file (torch)", {
   skip_if_not_installed("torch")
-  dict <- safe_load_file(test_path("safetensors/hello.safetensors"), framework = "torch")
+  dict <- safe_load_file(
+    test_path("safetensors/hello.safetensors"),
+    framework = "torch"
+  )
   expect_equal(names(dict), c("hello", "world"))
 
   expect_equal(dict$hello$shape, c(10, 10))
@@ -12,7 +15,10 @@ test_that("load a file (torch)", {
 
 test_that("load a file (pjrt)", {
   skip_if_not_installed("pjrt")
-  dict <- safe_load_file(test_path("safetensors/hello.safetensors"), framework = "pjrt")
+  dict <- safe_load_file(
+    test_path("safetensors/hello.safetensors"),
+    framework = "pjrt"
+  )
   expect_equal(names(dict), c("hello", "world"))
 
   expect_equal(dim(dict$hello), c(10, 10))
