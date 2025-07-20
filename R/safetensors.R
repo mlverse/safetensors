@@ -176,21 +176,6 @@ torch_dtype_from_safe <- function(x) {
     "I32" = "int32",
     "I64" = "int64",
     "BF16" = "bfloat16",
-    "C64" = "cfloat",
-    "C128" = "cdouble",
-    "F8E5M2" = "float8_e5m2",
-    "F8E4M3FN" = "float8_e4m3fn",
-    "F8E4M3B11FNUZ" = "float8_e4m3b11fnuz",
-    "F8E5M2FNUZ" = "float8_e5m2fnuz",
-    "F8E4M3FNUZ" = "float8_e4m3fnuz",
-    "S4" = "int4",
-    "U4" = "uint4",
-    "S2" = "int2",
-    "U2" = "uint2",
-    "F8E4M3" = "float8_e4m3",
-    "F8E3M4" = "float8_e3m4",
-    "F8E8M0FNU" = "float8_e8m0fnu",
-    "F4E2M1FN" = "float4_e2m1fn",
     cli::cli_abort("Unsupported dtype {.val {x}}")
   )
 }
