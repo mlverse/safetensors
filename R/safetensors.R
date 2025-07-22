@@ -14,7 +14,7 @@
 #'   tensors <- list(x = torch::torch_randn(10, 10))
 #'   temp <- tempfile()
 #'   safe_save_file(tensors, temp)
-#'   safe_load_file(temp)
+#'   safe_load_file(temp, framework = "torch")
 #' }
 #'
 #' @seealso [safetensors], [safe_save_file()]
@@ -139,7 +139,7 @@ safetensors <- R6::R6Class(
   )
 )
 
-torch_tensor_from_raw <- function(raw, meta, device) {
+torch_tensor_from_raw <- function(raw, meta, device = "cpu") {
   x <- torch::torch_tensor_from_buffer(
     raw,
     shape = meta$shape,
@@ -154,7 +154,7 @@ torch_tensor_from_raw <- function(raw, meta, device) {
 
 pjrt_tensor_from_raw <- function(raw, meta, client = NULL) {
   if (is.null(client)) {
-    client <- pjrt::default_client()
+    client <- pjrt::pjrt_client()
   }
 
   dims <- as.integer(meta$shape)

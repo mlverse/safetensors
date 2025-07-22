@@ -19,7 +19,7 @@ Suggests:
     testthat (>= 3.0.0),
     torch (>= 0.11.0)
 Remotes:
-    r-xla/pjrt@feat-raw
+    r-xla/pjrt
 Config/testthat/edition: 3
 Imports:
     cli,

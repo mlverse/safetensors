@@ -36,7 +36,7 @@ if (rlang::is_installed("torch") && torch::torch_is_installed()) {
   tensors <- list(x = torch::torch_randn(10, 10))
   temp <- tempfile()
   safe_save_file(tensors, temp)
-  safe_load_file(temp)
+  safe_load_file(temp, framework = "torch")
 
   ser <- safe_serialize(tensors)
 }
