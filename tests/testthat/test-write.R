@@ -17,6 +17,7 @@ test_that("can write a safetensors file (torch)", {
 
 test_that("can write a safetensors file (pjrt)", {
   skip_if_not_installed("pjrt")
+  skip_on_os("windows")
 
   buffers <- list(
     x = pjrt::pjrt_buffer(array(rnorm(100), dim = c(10, 10))),
@@ -88,6 +89,7 @@ test_that("metadata validations", {
 
 test_that("with different datatypes (pjrt)", {
   skip_if_not_installed("pjrt")
+  skip_on_os("windows")
   types <- list(
     list(pjrt_type = "f32", rtype = "double"),
     list(pjrt_type = "f64", rtype = "double"),

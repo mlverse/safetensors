@@ -15,6 +15,7 @@ test_that("load a file (torch)", {
 
 test_that("load a file (pjrt)", {
   skip_if_not_installed("pjrt")
+  skip_on_os("windows")
   dict <- safe_load_file(
     test_path("safetensors/hello.safetensors"),
     framework = "pjrt"
@@ -31,6 +32,7 @@ test_that("load a file (pjrt)", {
 test_that("torch & pjrt interoperability", {
   skip_if_not_installed("torch")
   skip_if_not_installed("pjrt")
+  skip_on_os("windows")
 
   x <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2)
   torch_tensors <- list(x = torch::torch_tensor(x))
