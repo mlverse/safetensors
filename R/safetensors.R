@@ -159,21 +159,13 @@ pjrt_tensor_from_raw <- function(raw, meta, client = NULL) {
 
   dims <- as.integer(meta$shape)
 
-  if (!length(dims)) {
-    pjrt::pjrt_scalar(
-      raw,
-      type = safetensors_dtype_to_pjrt(meta$dtype),
-      client = client
-    )
-  } else {
-    pjrt::pjrt_buffer(
-      raw,
-      shape = dims,
-      type = safetensors_dtype_to_pjrt(meta$dtype),
-      client = client,
-      row_major = TRUE
-    )
-  }
+  pjrt::pjrt_buffer(
+    raw,
+    shape = dims,
+    type = safetensors_dtype_to_pjrt(meta$dtype),
+    client = client,
+    row_major = TRUE
+  )
 }
 
 torch_dtype_from_safe <- function(x) {
