@@ -9,9 +9,9 @@
 <!-- badges: end -->
 
 safetensors is a pure R implementation of the
-[safetensors](https://github.com/huggingface/safetensors) file format.
-
-Currently only reading files is supported.
+[safetensors](https://github.com/huggingface/safetensors) file format
+for both reading and writing. It currently supports the {torch} and
+{pjrt} frameworks.
 
 ## Installation
 
@@ -31,7 +31,8 @@ devtools::install_github("mlverse/safetensors")
 
 ## Example
 
-Here’s an example of writing and reading safetensors files:
+Here’s an example of writing and reading safetensors files in
+combination with torch:
 
 ``` r
 library(torch)
@@ -50,7 +51,7 @@ str(tensors)
 tmp <- tempfile()
 safe_save_file(tensors, tmp)
 
-tensors <- safe_load_file(tmp)
+tensors <- safe_load_file(tmp, framework = "torch")
 str(tensors)
 #> List of 2
 #>  $ x:Float [1:10, 1:10]
