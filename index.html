@@ -8,8 +8,8 @@
 <title>Safetensors File Format • safetensors</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Safetensors File Format">
 <meta name="description" content="A file format for storing tensors that is secure (doesnt allow for code execution), fast and simple to implement. safetensors' also enables cross language and cross frameworks compatibility making it an ideal format for storing machine learning model weights.">
 <meta property="og:description" content="A file format for storing tensors that is secure (doesnt allow for code execution), fast and simple to implement. safetensors' also enables cross language and cross frameworks compatibility making it an ideal format for storing machine learning model weights.">
@@ -51,8 +51,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>safetensors is a pure R implementation of the <a href="https://github.com/huggingface/safetensors" class="external-link">safetensors</a> file format.</p>
-<p>Currently only reading files is supported.</p>
+<p>safetensors is a pure R implementation of the <a href="https://github.com/huggingface/safetensors" class="external-link">safetensors</a> file format for both reading and writing. It currently supports the {torch} and {pjrt} frameworks.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -67,14 +66,14 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Here’s an example of writing and reading safetensors files:</p>
+<p>Here’s an example of writing and reading safetensors files in combination with torch:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs" class="external-link">torch</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlverse/safetensors" class="external-link">safetensors</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tensors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_randn.html" class="external-link">torch_randn</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/torch/man/torch_ones.html" class="external-link">torch_ones</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span>  x <span class="op">=</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/torch_randn.html" class="external-link">torch_randn</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  y <span class="op">=</span> <span class="fu"><a href="https://torch.mlverse.org/docs/reference/torch_ones.html" class="external-link">torch_ones</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">tensors</span><span class="op">)</span></span>
@@ -85,7 +84,7 @@
 <span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/safe_save_file.html">safe_save_file</a></span><span class="op">(</span><span class="va">tensors</span>, <span class="va">tmp</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tensors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/safe_load_file.html">safe_load_file</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span>
+<span><span class="va">tensors</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/safe_load_file.html">safe_load_file</a></span><span class="op">(</span><span class="va">tmp</span>, framework <span class="op">=</span> <span class="st">"torch"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">tensors</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 2</span></span>
 <span><span class="co">#&gt;  $ x:Float [1:10, 1:10]</span></span>
@@ -130,7 +129,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Daniel Falbel <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Daniel Falbel <br><small class="roles"> Author, maintainer </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -151,7 +150,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

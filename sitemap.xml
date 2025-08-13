@@ -8,6 +8,9 @@
 <url><loc>https://mlverse.github.io/safetensors/reference/index.html</loc></url>
 <url><loc>https://mlverse.github.io/safetensors/reference/safe_load_file.html</loc></url>
 <url><loc>https://mlverse.github.io/safetensors/reference/safe_save_file.html</loc></url>
+<url><loc>https://mlverse.github.io/safetensors/reference/safe_tensor_buffer.html</loc></url>
+<url><loc>https://mlverse.github.io/safetensors/reference/safe_tensor_meta.html</loc></url>
 <url><loc>https://mlverse.github.io/safetensors/reference/safetensors.html</loc></url>
+<url><loc>https://mlverse.github.io/safetensors/reference/safetensors_frameworks.html</loc></url>
 </urlset>
 
