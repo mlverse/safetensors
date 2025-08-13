@@ -19,7 +19,7 @@ if (rlang::is_installed("torch") && torch::torch_is_installed()) {
 tensors <- list(x = torch::torch_randn(10, 10))
 temp <- tempfile()
 safe_save_file(tensors, temp)
-f <- safetensors$new(temp)
+f <- safetensors$new(temp, framework = "torch")
 f$get_tensor("x")
 }
 
@@ -33,7 +33,7 @@ f$get_tensor("x")
 
 \item{\code{framework}}{the framework used to return the tensors}
 
-\item{\code{device}}{the device to where tensors are copied}
+\item{\code{args}}{additional arguments for tensor creation}
 
 \item{\code{max_offset}}{the largest offset boundary that was visited. Mainly
 used in torch to find the end of the safetensors file.}
@@ -55,7 +55,7 @@ used in torch to find the end of the safetensors file.}
 \subsection{Method \code{new()}}{
 Opens the connection with the file
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{safetensors$new(path, ..., framework = "torch", device = "cpu")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{safetensors$new(path, ..., framework)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,11 +63,11 @@ Opens the connection with the file
 \describe{
 \item{\code{path}}{Path to the file to load}
 
-\item{\code{...}}{Unused}
+\item{\code{...}}{(any)\cr
+Additional, framework dependent, arguments to pass to use when creating the tensor.
+For torch, this is the device, for pjrt the client.}
 
-\item{\code{framework}}{Framework to load the data into. Currently only torch is supported}
-
-\item{\code{device}}{Device to copy data once loaded}
+\item{\code{framework}}{Framework to load the data into. Currently supports "torch" and "pjrt"}
 }
 \if{html}{\out{</div>}}
 }

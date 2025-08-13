@@ -3,21 +3,22 @@ Title: Safetensors File Format
 Version: 0.1.2.9000
 Authors@R: c(
     person("Daniel", "Falbel", , "daniel@posit.co", role = c("aut", "cre")),
+    person("Sebastian", "Fischer", , "seb.fischer@tutamail.com", role = "ctb"),
     person(family = "Posit", role = c("cph"))
     )
-Description: A file format for storing tensors that is secure (doesn't allow for 
-    code execution), fast and simple to implement. 'safetensors' also enables cross 
-    language and cross frameworks compatibility making it an ideal format for 
+Description: A file format for storing tensors that is secure (doesn't allow for
+    code execution), fast and simple to implement. 'safetensors' also enables cross
+    language and cross frameworks compatibility making it an ideal format for
     storing machine learning model weights.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
-Suggests: 
+RoxygenNote: 7.3.2
+Suggests:
     testthat (>= 3.0.0),
     torch (>= 0.11.0)
 Config/testthat/edition: 3
-Imports: 
+Imports:
     cli,
     jsonlite,
     R6,

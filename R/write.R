@@ -12,7 +12,7 @@
 #'   tensors <- list(x = torch::torch_randn(10, 10))
 #'   temp <- tempfile()
 #'   safe_save_file(tensors, temp)
-#'   safe_load_file(temp)
+#'   safe_load_file(temp, framework = "torch")
 #'
 #'   ser <- safe_serialize(tensors)
 #' }
@@ -27,7 +27,12 @@ safe_save_file <- function(tensors, path, ..., metadata = NULL) {
 
   if (is.character(path)) {
     con <- file(path, open = "wb")
-    on.exit({close(con)}, add = TRUE)
+    on.exit(
+      {
+        close(con)
+      },
+      add = TRUE
+    )
   } else {
     con <- path
   }
@@ -40,7 +45,12 @@ safe_save_file <- function(tensors, path, ..., metadata = NULL) {
 #' @export
 safe_serialize <- function(tensors, ..., metadata = NULL) {
   con <- rawConnection(raw(), open = "wb")
-  on.exit({close(con)}, add = TRUE)
+  on.exit(
+    {
+      close(con)
+    },
+    add = TRUE
+  )
   safe_save_file(tensors, con, metadata = metadata)
   rawConnectionValue(con)
 }
@@ -53,7 +63,7 @@ write_safe <- function(tensors, metadata, con) {
   writeBin(length(meta_raw), con = con, size = 8L)
   writeBin(meta_raw, con = con)
   for (tensor in tensors) {
-    buf <- tensor_buffer(tensor)
+    buf <- safe_tensor_buffer(tensor)
     writeBin(buf, con = con)
   }
 }
@@ -70,7 +80,7 @@ make_meta <- function(tensors, metadata) {
 
   pos <- 0L
   for (nm in names(tensors)) {
-    meta <- tensor_meta(tensors[[nm]])
+    meta <- safe_tensor_meta(tensors[[nm]])
     meta$data_offsets <- c(pos, pos + size_from_meta(meta))
     pos <- meta$data_offsets[2]
     meta_[[nm]] <- meta
@@ -79,47 +89,26 @@ make_meta <- function(tensors, metadata) {
   meta_
 }
 
-tensor_buffer <- function(x) {
-  UseMethod("tensor_buffer")
+#' @title Get raw buffer from a tensor
+#' @description
+#' Convert a tensor object to a raw buffer in the formated expected by safetensors.
+#' @param x (any)\cr
+#'   Tensor object.
+#' @returns (`raw`)
+#' @export
+safe_tensor_buffer <- function(x) {
+  UseMethod("safe_tensor_buffer")
 }
 
-tensor_buffer.torch_tensor <- function(x) {
-  torch::buffer_from_torch_tensor(x$cpu())
-}
-
-tensor_meta <- function(x) {
-  UseMethod("tensor_meta")
-}
-
-tensor_meta.torch_tensor <- function(x) {
-  list(
-    shape = as.list(x$shape), # we must store as a list to avoid simplification
-    dtype = torch_dtype_to_safe(x$dtype)
-  )
-}
-
-torch_dtype_to_safe <- function(x) {
-  if (x == torch::torch_float()) {
-    return("F32")
-  } else if (x == torch::torch_float16()) {
-    return("F16")
-  } else if (x == torch::torch_float64()) {
-    return("F64")
-  } else if (x == torch::torch_bool()) {
-    return("BOOL")
-  } else if (x == torch::torch_uint8()) {
-    return("U8")
-  } else if (x == torch::torch_int8()) {
-    return("I8")
-  } else if (x == torch::torch_int16()) {
-    return("I16")
-  } else if (x == torch::torch_int32()) {
-    return("I32")
-  } else if (x == torch::torch_int64()) {
-    return("I64")
-  } else {
-    cli::cli_abort("Unsupported data type {.val {x}}")
-  }
+#' @title Get metadata from a tensor
+#' @description
+#' Get the metadata from a tensor.
+#' @param x (any)\cr
+#'   Tensor object.
+#' @returns (`list`)
+#' @export
+safe_tensor_meta <- function(x) {
+  UseMethod("safe_tensor_meta")
 }
 
 size_from_meta <- function(meta) {
@@ -143,19 +132,32 @@ size_from_meta <- function(meta) {
     8L
   } else if (meta$dtype == "BOOL") {
     1L
+  } else if (meta$dtype == "U16") {
+    2L
+  } else if (meta$dtype == "U32") {
+    4L
+  } else if (meta$dtype == "U64") {
+    8L
   } else {
     cli::cli_abort("Unsupported dtype {.val {meta$dtype}}")
   }
 
-  as.integer(numel*el_size)
+  as.integer(numel * el_size)
 }
 
 validate_metadata <- function(x) {
-  if (!rlang::is_list(x)) cli::cli_abort("{.arg metadata} must be a list.")
-  if (!rlang::is_named(x)) cli::cli_abort("{.arg metadata} must be a named list.")
+  if (!rlang::is_list(x)) {
+    cli::cli_abort("{.arg metadata} must be a list.")
+  }
+  if (!rlang::is_named(x)) {
+    cli::cli_abort("{.arg metadata} must be a named list.")
+  }
   lapply(x, function(item) {
-    if (!rlang::is_scalar_character(item))
-      cli::cli_abort("{.arg metadata} must be a named list of scalar characters.")
+    if (!rlang::is_scalar_character(item)) {
+      cli::cli_abort(
+        "{.arg metadata} must be a named list of scalar characters."
+      )
+    }
   })
   x
 }

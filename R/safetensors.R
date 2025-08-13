@@ -3,9 +3,8 @@
 #' Loads an safetensors file from disk.
 #'
 #' @param path Path to the file to load
-#' @param ... Unused
-#' @param framework Framework to load the data into. Currently only torch is supported
-#' @param device Device to copy data once loaded
+#' @param framework Framework to load the data into. Currently supports "torch" and "pjrt"
+#' @param ... Additional framework dependent arguments to pass to the tensor creation function.
 #'
 #' @returns A list with tensors in the file. The `metadata` attribute can be used
 #' to find metadata the metadata header in the file.
@@ -15,14 +14,14 @@
 #'   tensors <- list(x = torch::torch_randn(10, 10))
 #'   temp <- tempfile()
 #'   safe_save_file(tensors, temp)
-#'   safe_load_file(temp)
+#'   safe_load_file(temp, framework = "torch")
 #' }
 #'
 #' @seealso [safetensors], [safe_save_file()]
 #'
 #' @export
-safe_load_file <- function(path, ..., framework = "torch", device = "cpu") {
-  f <- safetensors$new(path, framework = framework, device = device)
+safe_load_file <- function(path, ..., framework) {
+  f <- safetensors$new(path, ..., framework = framework)
   nms <- f$keys()
   output <- structure(
     vector(length = length(nms), mode = "list"),
@@ -48,7 +47,7 @@ safe_load_file <- function(path, ..., framework = "torch", device = "cpu") {
 #' tensors <- list(x = torch::torch_randn(10, 10))
 #' temp <- tempfile()
 #' safe_save_file(tensors, temp)
-#' f <- safetensors$new(temp)
+#' f <- safetensors$new(temp, framework = "torch")
 #' f$get_tensor("x")
 #' }
 #'
@@ -64,20 +63,21 @@ safetensors <- R6::R6Class(
     metadata = NULL,
     #' @field framework the framework used to return the tensors
     framework = NULL,
-    #' @field device the device to where tensors are copied
-    device = NULL,
+    #' @field args additional arguments for tensor creation
+    args = NULL,
     #' @field max_offset the largest offset boundary that was visited. Mainly
     #' used in torch to find the end of the safetensors file.
     max_offset = 0L,
     #' @description
     #' Opens the connection with the file
     #' @param path Path to the file to load
-    #' @param ... Unused
-    #' @param framework Framework to load the data into. Currently only torch is supported
-    #' @param device Device to copy data once loaded
-    initialize = function(path, ..., framework = "torch", device = "cpu") {
+    #' @param framework Framework to load the data into. Currently supports "torch" and "pjrt"
+    #' @param ... (any)\cr
+    #'   Additional, framework dependent, arguments to pass to use when creating the tensor.
+    #'   For torch, this is the device, for pjrt the client.
+    initialize = function(path, ..., framework) {
       self$framework <- validate_framework(framework)
-      self$device <- device
+      self$args <- list(...)
 
       # read in the metadata and store it
       if (is.raw(path)) {
@@ -94,7 +94,10 @@ safetensors <- R6::R6Class(
       metadata_size <- readBin(self$con, what = integer(), n = 1, size = 8)
       raw_json <- readBin(self$con, what = "raw", n = metadata_size)
 
-      self$metadata <- jsonlite::parse_json(rawToChar(raw_json), simplifyVector = TRUE)
+      self$metadata <- jsonlite::parse_json(
+        rawToChar(raw_json),
+        simplifyVector = TRUE
+      )
       private$byte_buffer_begin <- 8L + metadata_size
     },
     #' @description
@@ -116,11 +119,16 @@ safetensors <- R6::R6Class(
       seek(self$con, offset_start)
       raw_tensor <- readBin(self$con, what = "raw", n = offset_length)
 
-      if (self$framework == "torch") {
-        torch_tensor_from_raw(raw_tensor, meta, self$device)
-      } else {
+      if (!self$framework %in% names(safetensors_frameworks)) {
         cli::cli_abort("Unsupported framework {.val {.self$framework}}")
       }
+
+      rlang::exec(
+        safetensors_frameworks[[self$framework]]$constructor,
+        raw_tensor,
+        meta,
+        !!!self$args
+      )
     }
   ),
   private = list(
@@ -134,42 +142,12 @@ safetensors <- R6::R6Class(
   )
 )
 
-torch_tensor_from_raw <- function(raw, meta, device) {
-  x <- torch::torch_tensor_from_buffer(
-    raw,
-    shape = meta$shape,
-    dtype = torch_dtype_from_safe(meta$dtype)
-  )
-  if (device == "cpu") {
-    x$clone() # we need to explicitly clone in case the device is cpu
-  } else {
-    x$to(device = device)
-  }
-}
-
-torch_dtype_from_safe <- function(x) {
-  switch (
-    x,
-    "F16" = "float16",
-    "F32" = "float",
-    "F64" = "float64",
-    "BOOL" = "bool",
-    "U8" = "uint8",
-    "I8" = "int8",
-    "I16" = "int16",
-    "I32" = "int32",
-    "I64" = "int64",
-    "BF16" = "bfloat16",
-    cli::cli_abort("Unsupported dtype {.val {x}}")
-  )
-}
-
 validate_framework <- function(x) {
-  if (!x %in% c("torch")) {
+  info <- safetensors_frameworks[[x]]
+
+  if (is.null(info)) {
     cli::cli_abort("Unsupported framework {.val {x}}")
   }
-  if (x == "torch") {
-    rlang::check_installed(x, reason = "for loading torch tensors.")
-  }
+  rlang::check_installed(info$packages, reason = "for loading {x} tensors.")
   x
 }
