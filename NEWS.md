@@ -1,4 +1,4 @@
-# safetensors (development version)
+# safetensors 0.2.0
 
 * Refactored the package so other packages can extend it.
   This is possible by:
