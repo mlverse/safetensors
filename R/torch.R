@@ -40,3 +40,33 @@ safe_tensor_meta.torch_tensor <- function(x) {
     dtype = torch_dtype_to_safe(x$dtype)
   )
 }
+
+torch_tensor_from_raw <- function(raw, meta, device = "cpu") {
+  x <- torch::torch_tensor_from_buffer(
+    raw,
+    shape = meta$shape,
+    dtype = torch_dtype_from_safe(meta$dtype)
+  )
+  if (device == "cpu") {
+    x$clone() # we need to explicitly clone in case the device is cpu
+  } else {
+    x$to(device = device)
+  }
+}
+
+torch_dtype_from_safe <- function(x) {
+  switch(
+    x,
+    "F16" = "float16",
+    "F32" = "float",
+    "F64" = "float64",
+    "BOOL" = "bool",
+    "U8" = "uint8",
+    "I8" = "int8",
+    "I16" = "int16",
+    "I32" = "int32",
+    "I64" = "int64",
+    "BF16" = "bfloat16",
+    cli::cli_abort("Unsupported dtype {.val {x}}")
+  )
+}
