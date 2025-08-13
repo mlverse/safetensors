@@ -8,7 +8,3 @@ safetensors_frameworks[["torch"]] <- list(
   constructor = torch_tensor_from_raw,
   packages = "torch"
 )
-safetensors_frameworks[["pjrt"]] <- list(
-  constructor = pjrt_tensor_from_raw,
-  packages = "pjrt"
-)

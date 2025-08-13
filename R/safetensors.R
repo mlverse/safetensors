@@ -155,22 +155,6 @@ torch_tensor_from_raw <- function(raw, meta, device = "cpu") {
   }
 }
 
-pjrt_tensor_from_raw <- function(raw, meta, client = NULL) {
-  if (is.null(client)) {
-    client <- pjrt::pjrt_client()
-  }
-
-  dims <- as.integer(meta$shape)
-
-  pjrt::pjrt_buffer(
-    raw,
-    shape = dims,
-    elt_type = safetensors_dtype_to_pjrt(meta$dtype),
-    client = client,
-    row_major = TRUE
-  )
-}
-
 torch_dtype_from_safe <- function(x) {
   switch(
     x,
@@ -189,9 +173,11 @@ torch_dtype_from_safe <- function(x) {
 }
 
 validate_framework <- function(x) {
-  if (!x %in% names(safetensors_frameworks)) {
+  info <- safetensors_frameworks[[x]]
+
+  if (is.null(info)) {
     cli::cli_abort("Unsupported framework {.val {x}}")
   }
-  rlang::check_installed(x, reason = "for loading {x} tensors.")
+  rlang::check_installed(info$packages, reason = "for loading {x} tensors.")
   x
 }

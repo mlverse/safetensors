@@ -5,7 +5,7 @@
 \alias{safetensors_frameworks}
 \title{Reflection of supported frameworks}
 \format{
-An object of class \code{environment} of length 2.
+An object of class \code{environment} of length 1.
 }
 \usage{
 safetensors_frameworks
