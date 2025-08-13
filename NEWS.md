@@ -1,6 +1,9 @@
 # safetensors (development version)
 
-* Added support for PJRT buffers.
+* Refactored the package so other packages can extend it.
+  This is possible by:
+  1. Implementing the `safe_tensor_buffer` and `safe_tensor_meta` methods.
+  2. Registering the framework with the reflection `safetensors_frameworks`.
 
 # safetensors 0.1.2
 

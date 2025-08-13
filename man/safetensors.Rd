@@ -19,7 +19,7 @@ if (rlang::is_installed("torch") && torch::torch_is_installed()) {
 tensors <- list(x = torch::torch_randn(10, 10))
 temp <- tempfile()
 safe_save_file(tensors, temp)
-f <- safetensors$new(temp)
+f <- safetensors$new(temp, framework = "torch")
 f$get_tensor("x")
 }
 
@@ -55,7 +55,7 @@ used in torch to find the end of the safetensors file.}
 \subsection{Method \code{new()}}{
 Opens the connection with the file
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{safetensors$new(path, ..., framework = "torch")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{safetensors$new(path, ..., framework)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

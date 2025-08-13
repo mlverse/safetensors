@@ -63,7 +63,7 @@ write_safe <- function(tensors, metadata, con) {
   writeBin(length(meta_raw), con = con, size = 8L)
   writeBin(meta_raw, con = con)
   for (tensor in tensors) {
-    buf <- tensor_buffer(tensor)
+    buf <- safe_tensor_buffer(tensor)
     writeBin(buf, con = con)
   }
 }
@@ -80,7 +80,7 @@ make_meta <- function(tensors, metadata) {
 
   pos <- 0L
   for (nm in names(tensors)) {
-    meta <- tensor_meta(tensors[[nm]])
+    meta <- safe_tensor_meta(tensors[[nm]])
     meta$data_offsets <- c(pos, pos + size_from_meta(meta))
     pos <- meta$data_offsets[2]
     meta_[[nm]] <- meta
@@ -89,12 +89,26 @@ make_meta <- function(tensors, metadata) {
   meta_
 }
 
-tensor_buffer <- function(x) {
-  UseMethod("tensor_buffer")
+#' @title Get raw buffer from a tensor
+#' @description
+#' Convert a tensor object to a raw buffer in the formated expected by safetensors.
+#' @param x (any)\cr
+#'   Tensor object.
+#' @returns (`raw`)
+#' @export
+safe_tensor_buffer <- function(x) {
+  UseMethod("safe_tensor_buffer")
 }
 
-tensor_meta <- function(x) {
-  UseMethod("tensor_meta")
+#' @title Get metadata from a tensor
+#' @description
+#' Get the metadata from a tensor.
+#' @param x (any)\cr
+#'   Tensor object.
+#' @returns (`list`)
+#' @export
+safe_tensor_meta <- function(x) {
+  UseMethod("safe_tensor_meta")
 }
 
 size_from_meta <- function(meta) {

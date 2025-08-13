@@ -93,14 +93,14 @@ test_that("with different datatypes (pjrt)", {
   types <- list(
     list(pjrt_type = "f32", rtype = "double"),
     list(pjrt_type = "f64", rtype = "double"),
-    list(pjrt_type = "s8", rtype = "integer"),
-    list(pjrt_type = "s16", rtype = "integer"),
-    list(pjrt_type = "s32", rtype = "integer"),
-    list(pjrt_type = "s64", rtype = "integer"),
-    list(pjrt_type = "u8", rtype = "integer"),
-    list(pjrt_type = "u16", rtype = "integer"),
-    list(pjrt_type = "u32", rtype = "integer"),
-    list(pjrt_type = "u64", rtype = "integer"),
+    list(pjrt_type = "i8", rtype = "integer"),
+    list(pjrt_type = "i16", rtype = "integer"),
+    list(pjrt_type = "i32", rtype = "integer"),
+    list(pjrt_type = "i64", rtype = "integer"),
+    list(pjrt_type = "ui8", rtype = "integer"),
+    list(pjrt_type = "ui16", rtype = "integer"),
+    list(pjrt_type = "ui32", rtype = "integer"),
+    list(pjrt_type = "ui64", rtype = "integer"),
     list(pjrt_type = "pred", rtype = "logical")
   )
 
@@ -115,7 +115,7 @@ test_that("with different datatypes (pjrt)", {
     )
 
     x <- list(
-      x = pjrt::pjrt_buffer(array(x, dim = c(5, 2)), type = type$pjrt_type)
+      x = pjrt::pjrt_buffer(array(x, dim = c(5, 2)), elt_type = type$pjrt_type)
     )
 
     tmp <- tempfile(fileext = ".safetensors")

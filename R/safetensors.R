@@ -47,7 +47,7 @@ safe_load_file <- function(path, ..., framework) {
 #' tensors <- list(x = torch::torch_randn(10, 10))
 #' temp <- tempfile()
 #' safe_save_file(tensors, temp)
-#' f <- safetensors$new(temp)
+#' f <- safetensors$new(temp, framework = "torch")
 #' f$get_tensor("x")
 #' }
 #'
@@ -75,7 +75,7 @@ safetensors <- R6::R6Class(
     #' @param ... (any)\cr
     #'   Additional, framework dependent, arguments to pass to use when creating the tensor.
     #'   For torch, this is the device, for pjrt the client.
-    initialize = function(path, ..., framework = "torch") {
+    initialize = function(path, ..., framework) {
       self$framework <- validate_framework(framework)
       self$args <- list(...)
 
@@ -119,13 +119,16 @@ safetensors <- R6::R6Class(
       seek(self$con, offset_start)
       raw_tensor <- readBin(self$con, what = "raw", n = offset_length)
 
-      if (self$framework == "torch") {
-        rlang::exec(torch_tensor_from_raw, raw_tensor, meta, !!!self$args)
-      } else if (self$framework == "pjrt") {
-        rlang::exec(pjrt_tensor_from_raw, raw_tensor, meta, !!!self$args)
-      } else {
+      if (!self$framework %in% names(safetensors_frameworks)) {
         cli::cli_abort("Unsupported framework {.val {.self$framework}}")
       }
+
+      rlang::exec(
+        safetensors_frameworks[[self$framework]]$constructor,
+        raw_tensor,
+        meta,
+        !!!self$args
+      )
     }
   ),
   private = list(
@@ -162,7 +165,7 @@ pjrt_tensor_from_raw <- function(raw, meta, client = NULL) {
   pjrt::pjrt_buffer(
     raw,
     shape = dims,
-    type = safetensors_dtype_to_pjrt(meta$dtype),
+    elt_type = safetensors_dtype_to_pjrt(meta$dtype),
     client = client,
     row_major = TRUE
   )
@@ -186,14 +189,9 @@ torch_dtype_from_safe <- function(x) {
 }
 
 validate_framework <- function(x) {
-  if (!x %in% c("torch", "pjrt")) {
+  if (!x %in% names(safetensors_frameworks)) {
     cli::cli_abort("Unsupported framework {.val {x}}")
   }
-  if (x == "torch") {
-    rlang::check_installed(x, reason = "for loading torch tensors.")
-  }
-  if (x == "pjrt") {
-    rlang::check_installed(x, reason = "for loading PJRT tensors.")
-  }
+  rlang::check_installed(x, reason = "for loading {x} tensors.")
   x
 }

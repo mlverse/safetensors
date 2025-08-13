@@ -28,11 +28,13 @@ torch_dtype_to_safe <- function(x) {
   }
 }
 
-tensor_buffer.torch_tensor <- function(x) {
+#' @export
+safe_tensor_buffer.torch_tensor <- function(x) {
   torch::buffer_from_torch_tensor(x$cpu())
 }
 
-tensor_meta.torch_tensor <- function(x) {
+#' @export
+safe_tensor_meta.torch_tensor <- function(x) {
   list(
     shape = as.list(x$shape), # we must store as a list to avoid simplification
     dtype = torch_dtype_to_safe(x$dtype)
