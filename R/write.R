@@ -57,21 +57,43 @@ safe_serialize <- function(tensors, ..., metadata = NULL) {
 
 write_safe <- function(tensors, metadata, con) {
   meta <- make_meta(tensors, metadata)
-  meta_raw <- charToRaw(jsonlite::toJSON(meta, auto_unbox = TRUE))
+  meta_json <- meta_to_json(meta)
+  meta_raw <- charToRaw(meta_json)
   # write the metadatasize as a 64bit int
 
   writeBin(length(meta_raw), con = con, size = 8L)
   writeBin(meta_raw, con = con)
-  for (tensor in tensors) {
-    buf <- safe_tensor_buffer(tensor)
+  # Use index-based iteration to handle empty string keys
+  for (i in seq_along(tensors)) {
+    buf <- safe_tensor_buffer(tensors[[i]])
     writeBin(buf, con = con)
   }
 }
 
+# Custom JSON serializer that preserves empty string keys
+# jsonlite::toJSON converts "" to "1", which breaks safetensors compatibility
+meta_to_json <- function(meta) {
+  nms <- names(meta)
+  # Check if we need custom handling (empty keys present)
+  if (!any(nchar(nms) == 0)) {
+    return(jsonlite::toJSON(meta, auto_unbox = TRUE))
+  }
+
+  # Manual JSON construction to preserve empty string keys
+  parts <- character(length(meta))
+  for (i in seq_along(meta)) {
+    nm <- nms[i]
+    val <- jsonlite::toJSON(meta[[i]], auto_unbox = TRUE)
+    parts[i] <- sprintf("\"%s\":%s", nm, val)
+  }
+  paste0("{", paste(parts, collapse = ","), "}")
+}
+
 make_meta <- function(tensors, metadata) {
+  nms <- names(tensors)
   meta_ <- structure(
     vector(mode = "list", length = length(tensors)),
-    names = names(tensors)
+    names = nms
   )
 
   if (!is.null(metadata)) {
@@ -81,12 +103,18 @@ make_meta <- function(tensors, metadata) {
   # Offsets accumulate past .Machine$integer.max for multi-GB files;
   # keep them as doubles (exactly representable well past 2^31)
   pos <- 0
-  for (nm in names(tensors)) {
-    meta <- safe_tensor_meta(tensors[[nm]])
+  # Use index-based access for tensors to handle empty string keys
+  # R's list[[""]] returns NULL even when "" is a valid key
+  for (i in seq_along(tensors)) {
+    meta <- safe_tensor_meta(tensors[[i]])
     meta$data_offsets <- c(pos, pos + size_from_meta(meta))
     pos <- meta$data_offsets[2]
-    meta_[[nm]] <- meta
+    # Assign to the pre-named slot by index, preserving the original name
+    meta_[[i]] <- meta
   }
+
+  # Restore original names (index assignment can corrupt empty string names)
+  names(meta_) <- nms
 
   meta_
 }

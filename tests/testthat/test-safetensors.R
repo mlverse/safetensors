@@ -13,6 +13,41 @@ test_that("load a file (torch)", {
   expect_true(all(as.numeric(dict$world) == 0))
 })
 
+test_that("roundtrip file with empty string tensor name (torch)", {
+  skip_if_not_installed("torch")
+
+  # Empty string keys commonly occur when using PyTorch forward hooks to capture
+  # intermediate outputs. For example, when validating a native R torch UNet
+  # implementation against Python diffusers, the root module output is captured
+  # with name "".
+  temp <- tempfile(fileext = ".safetensors")
+  tensors <- list(torch::torch_ones(2, 3), named = torch::torch_zeros(3, 2))
+  names(tensors)[1] <- ""  # Empty string key (root module output)
+
+  # Write should succeed
+  expect_no_error(safe_save_file(tensors, temp))
+
+  # Read should succeed
+  dict <- safe_load_file(temp, framework = "torch")
+
+  # Verify empty key is preserved
+  expect_true("" %in% names(dict))
+
+  # Note: R's list[[""]] returns NULL, so access empty keys by position
+  empty_idx <- which(names(dict) == "")
+  expect_equal(length(empty_idx), 1)
+
+  # Verify tensor contents
+  empty_tensor <- dict[[empty_idx]]
+  expect_s3_class(empty_tensor, "torch_tensor")
+  expect_equal(empty_tensor$shape, c(2, 3))
+  expect_true(all(as.numeric(empty_tensor) == 1))
+
+  # Named tensors should work normally
+  expect_equal(dict$named$shape, c(3, 2))
+  expect_true(all(as.numeric(dict$named) == 0))
+})
+
 #test_that("torch & pjrt interoperability", {
 #  skip_if_not_installed("torch")
 #  skip_if_not_installed("pjrt")
