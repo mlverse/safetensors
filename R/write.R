@@ -118,6 +118,8 @@ size_from_meta <- function(meta) {
     4L
   } else if (meta$dtype == "F16") {
     2L
+  } else if (meta$dtype == "BF16") {
+    2L
   } else if (meta$dtype == "F64") {
     8L
   } else if (meta$dtype == "U8") {
