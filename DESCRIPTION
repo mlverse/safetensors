@@ -1,8 +1,9 @@
 Package: safetensors
 Title: Safetensors File Format
-Version: 0.2.0.9000
+Version: 0.2.1
 Authors@R: c(
-    person("Daniel", "Falbel", , "daniel@posit.co", role = c("aut", "cre")),
+    person("Tomasz", "Kalinowski", , "tomasz@posit.co", role = c("ctb", "cre")),
+    person("Daniel", "Falbel", , "dfalbel@gmail.com", role = "aut"),
     person("Sebastian", "Fischer", , "seb.fischer@tutamail.com", role = "ctb"),
     person(family = "Posit", role = c("cph"))
     )
@@ -13,7 +14,7 @@ Description: A file format for storing tensors that is secure (doesn't allow for
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests:
     testthat (>= 3.0.0),
     torch (>= 0.11.0)

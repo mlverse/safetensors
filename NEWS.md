@@ -1,4 +1,6 @@
-# safetensors (development version)
+# safetensors 0.2.1
+
+* Changed maintainer to Tomasz Kalinowski.
 
 # safetensors 0.2.0
 

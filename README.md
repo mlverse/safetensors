@@ -9,7 +9,7 @@
 <!-- badges: end -->
 
 safetensors is a pure R implementation of the
-[safetensors](https://github.com/huggingface/safetensors) file format
+[safetensors](https://github.com/safetensors/safetensors) file format
 for both reading and writing. It currently supports the {torch} and
 {pjrt} frameworks.
 
