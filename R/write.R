@@ -138,6 +138,10 @@ size_from_meta <- function(meta) {
     4L
   } else if (meta$dtype == "U64") {
     8L
+  } else if (meta$dtype == "F8_E4M3") {
+    1L
+  } else if (meta$dtype == "F8_E5M2") {
+    1L
   } else {
     cli::cli_abort("Unsupported dtype {.val {meta$dtype}}")
   }
