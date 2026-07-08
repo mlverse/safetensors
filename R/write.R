@@ -63,29 +63,25 @@ write_safe <- function(tensors, metadata, con) {
 
   writeBin(length(meta_raw), con = con, size = 8L)
   writeBin(meta_raw, con = con)
-  # Use index-based iteration to handle empty string keys
+  # Index-based: tensors[[""]] returns NULL even when "" is a valid name
   for (i in seq_along(tensors)) {
     buf <- safe_tensor_buffer(tensors[[i]])
     writeBin(buf, con = con)
   }
 }
 
-# Custom JSON serializer that preserves empty string keys
-# jsonlite::toJSON converts "" to "1", which breaks safetensors compatibility
+# jsonlite::toJSON renames an empty ("") key to "1", so build the object
+# by hand when one is present. Keys are escaped through toJSON too.
 meta_to_json <- function(meta) {
   nms <- names(meta)
-  # Check if we need custom handling (empty keys present)
   if (!any(nchar(nms) == 0)) {
     return(jsonlite::toJSON(meta, auto_unbox = TRUE))
   }
 
-  # Manual JSON construction to preserve empty string keys
-  parts <- character(length(meta))
-  for (i in seq_along(meta)) {
-    nm <- nms[i]
-    val <- jsonlite::toJSON(meta[[i]], auto_unbox = TRUE)
-    parts[i] <- sprintf("\"%s\":%s", nm, val)
-  }
+  parts <- vapply(seq_along(meta), function(i) {
+    key <- jsonlite::toJSON(nms[i], auto_unbox = TRUE)
+    paste0(key, ":", jsonlite::toJSON(meta[[i]], auto_unbox = TRUE))
+  }, character(1))
   paste0("{", paste(parts, collapse = ","), "}")
 }
 
@@ -96,25 +92,23 @@ make_meta <- function(tensors, metadata) {
     names = nms
   )
 
-  if (!is.null(metadata)) {
-    meta_[["__metadata__"]] <- validate_metadata(metadata)
-  }
-
   # Offsets accumulate past .Machine$integer.max for multi-GB files;
   # keep them as doubles (exactly representable well past 2^31)
   pos <- 0
-  # Use index-based access for tensors to handle empty string keys
-  # R's list[[""]] returns NULL even when "" is a valid key
+  # Index-based: tensors[[""]] returns NULL even when "" is a valid name
   for (i in seq_along(tensors)) {
     meta <- safe_tensor_meta(tensors[[i]])
     meta$data_offsets <- c(pos, pos + size_from_meta(meta))
     pos <- meta$data_offsets[2]
-    # Assign to the pre-named slot by index, preserving the original name
     meta_[[i]] <- meta
   }
-
-  # Restore original names (index assignment can corrupt empty string names)
+  # `[[i]] <-` can drop an empty name; restore before appending __metadata__
+  # (whose slot would otherwise make nms the wrong length)
   names(meta_) <- nms
+
+  if (!is.null(metadata)) {
+    meta_[["__metadata__"]] <- validate_metadata(metadata)
+  }
 
   meta_
 }

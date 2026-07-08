@@ -48,6 +48,31 @@ test_that("roundtrip file with empty string tensor name (torch)", {
   expect_true(all(as.numeric(dict$named) == 0))
 })
 
+test_that("empty tensor name coexists with metadata and escaped keys (torch)", {
+  skip_if_not_installed("torch")
+
+  # An empty key must not break the __metadata__ path, and the hand-built
+  # JSON used when an empty key is present must escape other keys.
+  temp <- tempfile(fileext = ".safetensors")
+  tensors <- list(torch::torch_ones(2), torch::torch_zeros(2))
+  names(tensors) <- c("", "a\"b\\c")
+
+  expect_no_error(safe_save_file(tensors, temp, metadata = list(fmt = "pt")))
+  dict <- safe_load_file(temp, framework = "torch")
+
+  expect_true(all(c("", "a\"b\\c") %in% names(dict)))
+  expect_equal(attr(dict, "metadata")[["__metadata__"]]$fmt, "pt")
+
+  # metadata path with only ordinary keys (regression: the name restore
+  # must not fire while the __metadata__ slot makes meta_ longer than nms)
+  temp2 <- tempfile(fileext = ".safetensors")
+  expect_no_error(safe_save_file(
+    list(a = torch::torch_ones(2)), temp2, metadata = list(fmt = "pt")
+  ))
+  d2 <- safe_load_file(temp2, framework = "torch")
+  expect_equal(attr(d2, "metadata")[["__metadata__"]]$fmt, "pt")
+})
+
 #test_that("torch & pjrt interoperability", {
 #  skip_if_not_installed("torch")
 #  skip_if_not_installed("pjrt")

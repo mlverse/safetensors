@@ -28,11 +28,9 @@ safe_load_file <- function(path, ..., framework) {
     names = nms,
     metadata = f$metadata
   )
+  # Index-based: output[[""]] <- x appends instead of filling the "" slot
   for (i in seq_along(nms)) {
-    key <- nms[i]
-    # Use index-based assignment to handle empty string keys correctly
-    # R's list[[""]] <- value adds a new element instead of updating existing
-    output[[i]] <- f$get_tensor(key)
+    output[[i]] <- f$get_tensor(nms[i])
   }
   attr(output, "max_offset") <- f$max_offset
   output
@@ -113,7 +111,7 @@ safetensors <- R6::R6Class(
     #' Get a tensor from its name
     #' @param name Name of the tensor to load
     get_tensor = function(name) {
-      # Handle empty string keys - R's list[[""]] returns NULL even when "" is a valid key
+      # self$metadata[[""]] returns NULL even when "" is a valid key
       if (nchar(name) == 0) {
         idx <- which(names(self$metadata) == "")
         if (length(idx) == 0) {
