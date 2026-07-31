@@ -28,8 +28,9 @@ safe_load_file <- function(path, ..., framework) {
     names = nms,
     metadata = f$metadata
   )
-  for (key in nms) {
-    output[[key]] <- f$get_tensor(key)
+  # Index-based: output[[""]] <- x appends instead of filling the "" slot
+  for (i in seq_along(nms)) {
+    output[[i]] <- f$get_tensor(nms[i])
   }
   attr(output, "max_offset") <- f$max_offset
   output
@@ -110,7 +111,16 @@ safetensors <- R6::R6Class(
     #' Get a tensor from its name
     #' @param name Name of the tensor to load
     get_tensor = function(name) {
-      meta <- self$metadata[[name]]
+      # self$metadata[[""]] returns NULL even when "" is a valid key
+      if (nchar(name) == 0) {
+        idx <- which(names(self$metadata) == "")
+        if (length(idx) == 0) {
+          cli::cli_abort("Tensor with empty name not found in metadata")
+        }
+        meta <- self$metadata[[idx[1]]]
+      } else {
+        meta <- self$metadata[[name]]
+      }
 
       # Offsets in multi-GB files exceed .Machine$integer.max; JSON parses
       # smaller values as integers, so sums must be computed as doubles
