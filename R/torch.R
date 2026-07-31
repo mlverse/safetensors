@@ -19,6 +19,10 @@ torch_dtype_to_safe <- function(x) {
     return("I64")
   } else if (x == torch::torch_bfloat16()) {
     return("BF16")
+  } else if (x == torch::torch_float8_e4m3fn()) {
+    return("F8_E4M3")
+  } else if (x == torch::torch_float8_e5m2()) {
+    return("F8_E5M2")
   } else if (x == torch::torch_cfloat()) {
     return("C64")
   } else if (x == torch::torch_cdouble()) {
@@ -67,6 +71,8 @@ torch_dtype_from_safe <- function(x) {
     "I32" = "int32",
     "I64" = "int64",
     "BF16" = "bfloat16",
+    "F8_E4M3" = "float8_e4m3fn",
+    "F8_E5M2" = "float8_e5m2",
     cli::cli_abort("Unsupported dtype {.val {x}}")
   )
 }
