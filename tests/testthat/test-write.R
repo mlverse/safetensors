@@ -18,6 +18,7 @@ test_that("can write a safetensors file (torch)", {
 test_that("with different datatypes (torch)", {
   data_type <- c(
     "float16",
+    "bfloat16",
     "float",
     "float64",
     "bool",
