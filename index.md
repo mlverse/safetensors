@@ -10,6 +10,7 @@ for both reading and writing. It currently supports the {torch} and
 safetensors can be installed from CRAN with:
 
 ``` r
+
 install.packages("safetensors")
 ```
 
@@ -17,6 +18,7 @@ The development version of safetensors from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("mlverse/safetensors")
 ```
@@ -27,6 +29,7 @@ Here’s an example of writing and reading safetensors files in
 combination with torch:
 
 ``` r
+
 library(torch)
 library(safetensors)
 
