@@ -78,7 +78,9 @@ make_meta <- function(tensors, metadata) {
     meta_[["__metadata__"]] <- validate_metadata(metadata)
   }
 
-  pos <- 0L
+  # Offsets accumulate past .Machine$integer.max for multi-GB files;
+  # keep them as doubles (exactly representable well past 2^31)
+  pos <- 0
   for (nm in names(tensors)) {
     meta <- safe_tensor_meta(tensors[[nm]])
     meta$data_offsets <- c(pos, pos + size_from_meta(meta))
@@ -142,7 +144,9 @@ size_from_meta <- function(meta) {
     cli::cli_abort("Unsupported dtype {.val {meta$dtype}}")
   }
 
-  as.integer(numel * el_size)
+  # Doubles, not integers: tensor byte sizes and cumulative offsets can
+  # exceed .Machine$integer.max
+  numel * el_size
 }
 
 validate_metadata <- function(x) {

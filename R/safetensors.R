@@ -98,7 +98,7 @@ safetensors <- R6::R6Class(
         rawToChar(raw_json),
         simplifyVector = TRUE
       )
-      private$byte_buffer_begin <- 8L + metadata_size
+      private$byte_buffer_begin <- 8 + as.numeric(metadata_size)
     },
     #' @description
     #' Get the keys (tensor names) in the file
@@ -112,8 +112,11 @@ safetensors <- R6::R6Class(
     get_tensor = function(name) {
       meta <- self$metadata[[name]]
 
-      offset_start <- private$byte_buffer_begin + meta$data_offsets[1]
-      offset_length <- meta$data_offsets[2] - meta$data_offsets[1]
+      # Offsets in multi-GB files exceed .Machine$integer.max; JSON parses
+      # smaller values as integers, so sums must be computed as doubles
+      offsets <- as.numeric(meta$data_offsets)
+      offset_start <- private$byte_buffer_begin + offsets[1]
+      offset_length <- offsets[2] - offsets[1]
       self$max_offset <- max(self$max_offset, offset_start + offset_length)
 
       seek(self$con, offset_start)
