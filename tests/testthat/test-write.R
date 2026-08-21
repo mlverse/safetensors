@@ -41,6 +41,24 @@ test_that("with different datatypes (torch)", {
   }
 })
 
+test_that("float8 datatypes round trip on CPU (torch)", {
+  skip_if_not_installed("torch", minimum_version = "0.13.0")
+
+  for (dtype in c("float8_e4m3fn", "float8_e5m2")) {
+    tensor <- torch::torch_randn(10, device = "cpu")$to(dtype = dtype)
+    reloaded <- safe_load_file(
+      safe_serialize(list(x = tensor)),
+      framework = "torch"
+    )
+
+    expect_true(reloaded$x$dtype == tensor$dtype)
+    expect_true(torch::torch_equal(
+      reloaded$x$to(dtype = "float"),
+      tensor$to(dtype = "float")
+    ))
+  }
+})
+
 test_that("metadata validations", {
   tensors <- list(
     x = torch::torch_randn(10, 10),
