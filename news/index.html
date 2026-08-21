@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">safetensors</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,19 @@
       <small>Source: <a href="https://github.com/mlverse/safetensors/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="safetensors-development-version">safetensors (development version)<a class="anchor" aria-label="anchor" href="#safetensors-development-version"></a></h2>
+<ul><li><p>Added support for reading and writing <code>F8_E4M3</code> and <code>F8_E5M2</code> tensors with torch. (<a href="https://github.com/mlverse/safetensors/issues/13" class="external-link">#13</a>, 1)</p></li>
+<li>
+<p>Fixed reading and writing tensors with empty names. Because <code>x[[""]]</code> returns <code>NULL</code> for a named R list, access these tensors by position. (<a href="https://github.com/mlverse/safetensors/issues/10" class="external-link">#10</a>,</p>
+<ol class="example" style="list-style-type: decimal"><li>
+</li></ol></li>
+<li>
+<p>Fixed reading and writing tensors at offsets larger than 2 GB. (<a href="https://github.com/mlverse/safetensors/issues/14" class="external-link">#14</a>,</p>
+<ol class="example" style="list-style-type: decimal"><li>
+</li></ol></li>
+<li><p>Fixed writing <code>bfloat16</code> tensors. (<a href="https://github.com/mlverse/safetensors/issues/11" class="external-link">#11</a>, 1)</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="safetensors-021">safetensors 0.2.1<a class="anchor" aria-label="anchor" href="#safetensors-021"></a></h2><p class="text-muted">CRAN release: 2026-04-27</p>
 <ul><li>Changed maintainer to Tomasz Kalinowski.</li>

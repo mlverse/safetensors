@@ -1,5 +1,25 @@
 # Changelog
 
+## safetensors (development version)
+
+- Added support for reading and writing `F8_E4M3` and `F8_E5M2` tensors
+  with torch. ([\#13](https://github.com/mlverse/safetensors/issues/13),
+  1)
+
+- Fixed reading and writing tensors with empty names. Because `x[[""]]`
+  returns `NULL` for a named R list, access these tensors by position.
+  ([\#10](https://github.com/mlverse/safetensors/issues/10),
+
+  1.  
+
+- Fixed reading and writing tensors at offsets larger than 2 GB.
+  ([\#14](https://github.com/mlverse/safetensors/issues/14),
+
+  1.  
+
+- Fixed writing `bfloat16` tensors.
+  ([\#11](https://github.com/mlverse/safetensors/issues/11), 1)
+
 ## safetensors 0.2.1
 
 CRAN release: 2026-04-27
