@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/mlverse/safetensors/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/mlverse/safetensors/blob/v0.3.0/DESCRIPTION)
 
 Falbel D (2026). *safetensors: Safetensors File Format*. R package
 version 0.3.0, <https://github.com/mlverse/safetensors>.
