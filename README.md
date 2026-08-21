@@ -65,5 +65,5 @@ str(tensors)
 #>   .. ..$ shape       : int [1:2] 10 10
 #>   .. ..$ dtype       : chr "F32"
 #>   .. ..$ data_offsets: int [1:2] 400 800
-#>  - attr(*, "max_offset")= int 929
+#>  - attr(*, "max_offset")= num 929
 ```

@@ -1,3 +1,17 @@
+# safetensors (development version)
+
+* Added support for reading and writing `F8_E4M3` and `F8_E5M2` tensors with
+  torch. (#13, @TroyHernandez)
+
+* Fixed reading and writing tensors with empty names. Because `x[[""]]` returns
+  `NULL` for a named R list, access these tensors by position. (#10,
+  @TroyHernandez)
+
+* Fixed reading and writing tensors at offsets larger than 2 GB. (#14,
+  @TroyHernandez)
+
+* Fixed writing `bfloat16` tensors. (#11, @TroyHernandez)
+
 # safetensors 0.2.1
 
 * Changed maintainer to Tomasz Kalinowski.

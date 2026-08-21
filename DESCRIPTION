@@ -1,6 +1,6 @@
 Package: safetensors
 Title: Safetensors File Format
-Version: 0.2.1
+Version: 0.2.1.9000
 Authors@R: c(
     person("Tomasz", "Kalinowski", , "tomasz@posit.co", role = c("ctb", "cre")),
     person("Daniel", "Falbel", , "dfalbel@gmail.com", role = "aut"),
