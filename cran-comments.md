@@ -1,7 +1,7 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* New maintainer:
-  Old maintainer: Daniel Falbel (daniel@posit.co)
-  New maintainer: Tomasz Kalinowski (tomasz@posit.co)
+## Reverse dependencies
+
+We checked all 6 reverse dependencies. No new problems were found.

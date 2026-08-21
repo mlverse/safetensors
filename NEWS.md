@@ -1,4 +1,4 @@
-# safetensors (development version)
+# safetensors 0.3.0
 
 * Added support for reading and writing `F8_E4M3` and `F8_E5M2` tensors with
   torch. (#13, @TroyHernandez)
