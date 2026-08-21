@@ -13,15 +13,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/mlverse/safetensors/blob/v0.3.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/mlverse/safetensors/blob/main/DESCRIPTION)
 
 Falbel D (2026). *safetensors: Safetensors File Format*. R package
-version 0.3.0, <https://github.com/mlverse/safetensors>.
+version 0.3.0.9000, <https://github.com/mlverse/safetensors>.
 
     @Manual{,
       title = {safetensors: Safetensors File Format},
       author = {Daniel Falbel},
       year = {2026},
-      note = {R package version 0.3.0},
+      note = {R package version 0.3.0.9000},
       url = {https://github.com/mlverse/safetensors},
     }
